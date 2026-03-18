@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Atlas — the rubber duck that actually talks back</title>
+  <meta property="og:title" content="rubber-duck-cli — the rubber duck that talks back">
+  <meta property="og:description" content="AI developer assistant in your terminal. BYOK, open source, no accounts needed.">
+  <meta property="og:url" content="https://PSGtatitos.github.io/rubber-duck-cli">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -239,6 +242,25 @@
     .feature-title { font-size: 14px; font-weight: 700; color: var(--bright); margin-bottom: 8px; }
     .feature-desc { font-size: 12px; color: var(--muted); line-height: 1.8; }
 
+    /* FLAGS TABLE */
+    .flags-table { width: 100%; border-collapse: collapse; margin-top: 40px; }
+    .flags-table th {
+      text-align: left; font-size: 11px; letter-spacing: 0.1em;
+      color: var(--muted); padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .flags-table td {
+      padding: 12px 16px; font-size: 12px;
+      border-bottom: 1px solid rgba(30,37,48,0.5);
+      vertical-align: top;
+    }
+    .flags-table tr:last-child td { border-bottom: none; }
+    .flags-table tr:hover td { background: rgba(255,204,0,0.02); }
+    .flag-name { color: var(--cyan); font-weight: 700; white-space: nowrap; }
+    .flag-short { color: var(--muted); margin-left: 6px; }
+    .flag-desc { color: var(--text); }
+    .flag-example { color: var(--muted); font-size: 11px; margin-top: 4px; }
+
     /* INSTALL */
     #install .steps { display: flex; flex-direction: column; gap: 2px; }
     .step { display: flex; background: var(--surface); border: 1px solid var(--border); }
@@ -294,6 +316,7 @@
   <ul class="nav-links">
     <li><a href="#demo">demo</a></li>
     <li><a href="#features">features</a></li>
+    <li><a href="#flags">flags</a></li>
     <li><a href="#install">install</a></li>
   </ul>
   <a class="nav-gh" href="https://github.com/PSGtatitos/rubber-duck-cli" target="_blank">
@@ -314,7 +337,7 @@
      //      \\
     //________\\</pre>
 
-  <span class="hero-badge">🦆 open source · BYOK · v1.0.39</span>
+  <span class="hero-badge">🦆 open source · BYOK · v1.0.28</span>
 
   <h1 class="hero-tagline">
     The rubber duck that<br/>
@@ -324,7 +347,8 @@
   <p class="hero-sub">
     Every developer has a rubber duck on their desk. Yours is named <strong>Atlas</strong>.
     Unlike other rubber ducks, Atlas doesn't just sit there — he answers your questions,
-    reads your code, searches the web, and writes files.
+    reads your code, searches the web, writes files, understands your git history,
+    and runs terminal commands for you.
     Powered by AI, living in your terminal.
   </p>
 
@@ -337,6 +361,10 @@
     <div class="stat">
       <span class="stat-val">70B</span>
       <span class="stat-label">LLaMA model</span>
+    </div>
+    <div class="stat">
+      <span class="stat-val">8</span>
+      <span class="stat-label">power flags</span>
     </div>
     <div class="stat">
       <span class="stat-val">100%</span>
@@ -359,7 +387,9 @@
   <div class="demo-tabs">
     <button class="demo-tab active" onclick="switchTab(this, 'tab-ask')">atlas ask</button>
     <button class="demo-tab" onclick="switchTab(this, 'tab-chat')">atlas chat</button>
-    <button class="demo-tab" onclick="switchTab(this, 'tab-flags')">flags</button>
+    <button class="demo-tab" onclick="switchTab(this, 'tab-git')">--git</button>
+    <button class="demo-tab" onclick="switchTab(this, 'tab-run')">RUN</button>
+    <button class="demo-tab" onclick="switchTab(this, 'tab-flags')">all flags</button>
   </div>
 
   <div class="terminal-window">
@@ -381,7 +411,7 @@
         <span class="t-blank"></span>
         <span class="t-line"><span class="t-key">  sudo systemctl start postgresql</span></span>
         <span class="t-blank"></span>
-        <span class="t-line"><span class="t-output">If it fails, check <span class="t-amber">journalctl -xe</span> for the real startup error.</span></span>
+        <span class="t-line"><span class="t-output">If it fails, check <span class="t-val">journalctl -xe</span> for the real startup error.</span></span>
         <span class="t-blank"></span>
         <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">atlas ask "fix the bug" --file index.js --write index.js</span></span>
         <span class="t-line"><span class="t-success">✓ wrote fixed version → index.js</span></span>
@@ -409,20 +439,62 @@
         <span class="t-line"><span class="t-prompt">❯ </span><span class="cursor"></span></span>
       </div>
 
+      <!-- GIT TAB -->
+      <div id="tab-git" class="demo-panel">
+        <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">git add .</span></span>
+        <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">atlas ask "write a commit message for my staged changes" --git</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-comment">Git context loaded.</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-success">🦆 Atlas: </span><span class="t-output">feat: add --run flag with safety checks and command execution</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">atlas chat --git</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-comment">Git context loaded.</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-key">You: </span><span class="t-output">what changed in the last 10 commits?</span></span>
+        <span class="t-line"><span class="t-success">Atlas: </span><span class="t-output">You've added git integration, web search, file writing,</span></span>
+        <span class="t-line"><span class="t-output">       and terminal command execution over the last 10 commits.</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-prompt">❯ </span><span class="cursor"></span></span>
+      </div>
+
+      <!-- RUN TAB -->
+      <div id="tab-run" class="demo-panel">
+        <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">atlas ask "list all running node processes" --run</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-success">🦆 Atlas</span> <span class="t-comment">generating command...</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-val">I want to run: </span><span class="t-output">ps aux | grep node</span></span>
+        <span class="t-line"><span class="t-val">Confirm? (y/n): </span><span class="t-output">y</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-comment">--- output ---</span></span>
+        <span class="t-line"><span class="t-output">chris   4821  0.4  1.2  node server.js</span></span>
+        <span class="t-line"><span class="t-output">chris   5103  0.1  0.8  node cli/index.js</span></span>
+        <span class="t-line"><span class="t-comment">--- exit code 0 ---</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-success">Atlas: </span><span class="t-output">You have two Node.js processes running — your server</span></span>
+        <span class="t-line"><span class="t-output">       on PID 4821 and Atlas itself on PID 5103.</span></span>
+        <span class="t-blank"></span>
+        <span class="t-line"><span class="t-prompt">❯ </span><span class="cursor"></span></span>
+      </div>
+
       <!-- FLAGS TAB -->
       <div id="tab-flags" class="demo-panel">
-        <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">atlas ask --help</span></span>
+        <span class="t-line"><span class="t-prompt">❯ </span><span class="t-cmd">atlas help</span></span>
         <span class="t-blank"></span>
         <span class="t-line"><span class="t-key">  --file,    -f  </span><span class="t-comment">Attach a file to your question</span></span>
         <span class="t-line"><span class="t-key">  --project, -p  </span><span class="t-comment">Load an entire directory into context</span></span>
         <span class="t-line"><span class="t-key">  --search,  -s  </span><span class="t-comment">Search the web via Tavily</span></span>
         <span class="t-line"><span class="t-key">  --write,   -w  </span><span class="t-comment">Write Atlas's response to a file</span></span>
-        <span class="t-line"><span class="t-key">  --git,     -g  </span><span class="t-comment">Include git context (diffs, commits)</span></span>
+        <span class="t-line"><span class="t-key">  --git,     -g  </span><span class="t-comment">Include git context (diffs, commits, history)</span></span>
+        <span class="t-line"><span class="t-key">  --run,     -r  </span><span class="t-comment">Generate and execute a terminal command</span></span>
         <span class="t-blank"></span>
         <span class="t-line"><span class="t-comment"># Works mid-conversation too:</span></span>
         <span class="t-line"><span class="t-output">  You: explain this --file server.js</span></span>
         <span class="t-line"><span class="t-output">  You: write a commit message --git</span></span>
         <span class="t-line"><span class="t-output">  You: latest Node.js release? --search</span></span>
+        <span class="t-line"><span class="t-output">  You: show running processes RUN</span></span>
         <span class="t-blank"></span>
         <span class="t-line"><span class="t-prompt">❯ </span><span class="cursor"></span></span>
       </div>
@@ -465,10 +537,86 @@
       <p class="feature-desc">Add <code style="color:var(--amber)">--git</code> and Atlas understands your repo — staged changes, diffs, recent commits. He'll even write your commit messages.</p>
     </div>
     <div class="feature-card" data-num="06">
+      <span class="feature-icon">⚡</span>
+      <div class="feature-title">Run terminal commands</div>
+      <p class="feature-desc">Say what you want in plain English with <code style="color:var(--amber)">--run</code> or <code style="color:var(--amber)">RUN</code> in chat. Atlas generates the command, shows it to you, asks for confirmation, runs it, and explains the output.</p>
+    </div>
+    <div class="feature-card" data-num="07">
       <span class="feature-icon">🔑</span>
       <div class="feature-title">Fully BYOK & open source</div>
       <p class="feature-desc">Your keys never leave your machine. No backend, no account, no usage limits beyond your own API keys. Fully open on GitHub — go audit it.</p>
     </div>
+    <div class="feature-card" data-num="08">
+      <span class="feature-icon">🔄</span>
+      <div class="feature-title">Streaming responses</div>
+      <p class="feature-desc">Responses print token by token as they arrive — no waiting for the full answer. Feels fast, feels alive. Just like talking to a real duck.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- FLAGS -->
+<section id="flags">
+  <p class="section-label">REFERENCE</p>
+  <h2 class="section-title">Every flag, explained.</h2>
+
+  <table class="flags-table">
+    <thead>
+      <tr>
+        <th>Flag</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="flag-name">--file</span><span class="flag-short">-f</span></td>
+        <td>
+          <div class="flag-desc">Attach a file to your question. Atlas reads the full contents and uses it as context.</div>
+          <div class="flag-example">atlas ask "explain this" --file index.js</div>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--project</span><span class="flag-short">-p</span></td>
+        <td>
+          <div class="flag-desc">Load an entire directory into context. Atlas reads all code files and understands your whole codebase.</div>
+          <div class="flag-example">atlas chat --project .</div>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--search</span><span class="flag-short">-s</span></td>
+        <td>
+          <div class="flag-desc">Search the web via Tavily before answering. Gets you current information beyond the model's training data.</div>
+          <div class="flag-example">atlas ask "latest Node.js LTS version" --search</div>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--write</span><span class="flag-short">-w</span></td>
+        <td>
+          <div class="flag-desc">Write Atlas's response directly to a file. Extracts code blocks intelligently — no copy-pasting needed.</div>
+          <div class="flag-example">atlas ask "create an express server" --write server.js</div>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--git</span><span class="flag-short">-g</span></td>
+        <td>
+          <div class="flag-desc">Include git context — current branch, staged changes, diffs, and recent commit history. Perfect for commit message generation.</div>
+          <div class="flag-example">atlas ask "write a commit message" --git</div>
+        </td>
+      </tr>
+      <tr>
+        <td><span class="flag-name">--run</span><span class="flag-short">-r</span></td>
+        <td>
+          <div class="flag-desc">Describe what you want in plain English. Atlas generates the terminal command, shows it to you, asks for confirmation, executes it, and explains the output. Use <code style="color:var(--amber)">RUN</code> mid-conversation in chat mode.</div>
+          <div class="flag-example">atlas ask "show processes using most memory" --run</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 24px; padding: 16px 20px; background: rgba(255,68,85,0.04); border: 1px solid rgba(255,68,85,0.15); border-left: 3px solid var(--red); border-radius: 0 4px 4px 0;">
+    <strong style="color: var(--red); font-size: 12px; letter-spacing: 0.1em; display: block; margin-bottom: 4px;">◆ SAFETY — --run IS PROTECTED</strong>
+    <p style="font-size: 12px; color: var(--muted);">Dangerous commands are blocked automatically. Atlas always shows you the command before running it and requires explicit <code style="color:var(--amber)">y</code> confirmation. You are always in control.</p>
   </div>
 </section>
 
@@ -507,12 +655,12 @@
     <div class="step">
       <div class="step-num">03</div>
       <div class="step-content">
-        <div class="step-title">INTRODUCE YOURSELF TO ATLAS</div>
+        <div class="step-title">CONFIGURE ATLAS</div>
         <div class="step-cmd">
           <span>atlas config</span>
           <button class="copy-btn" onclick="copyCmd(this, 'atlas config')">copy</button>
         </div>
-        <p class="step-note">Interactive setup — Atlas will ask for your name and API keys.</p>
+        <p class="step-note">Interactive setup — enter your Groq API key and optionally your Tavily key for web search.</p>
       </div>
     </div>
 
