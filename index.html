@@ -375,7 +375,7 @@
       <span class="stat-label">subscriptions</span>
     </div>
     <div class="stat">
-      <span class="stat-val">30</span>
+      <span id="downloads">Loading...</span>
       <span class="stat-label">Weekly Downloads</span>
     </div>
   </div>
@@ -716,6 +716,17 @@
       setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 1800);
     });
   }
+  async function getDownloads() {
+    const res = await fetch(
+      "https://api.npmjs.org/downloads/point/last-week/express"
+    );
+    const data = await res.json();
+  
+    document.getElementById("downloads").textContent =
+      data.downloads.toLocaleString();
+  }
+  
+  getDownloads();
 </script>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "1fef54f9153e44569f223efb6e53603c"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
